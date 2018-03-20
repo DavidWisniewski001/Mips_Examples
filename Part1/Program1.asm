@@ -22,34 +22,76 @@ Second:		.space	64
 main:	
 la $a1, Original	#Loads the adress of the Original array
 la $a2, Second		#Loads the adress of the second array
-li $s0, 4
+
+li $s1, 4		#The size of the x by x matrix
+li $s0, 4		#Constant to multiply by a word is 4 bytes
+li $k0, 3		#Where I want both counters to stop when i and j == 3
+mul $k1, $s0, $s1	# 4*4 =16
 
 li $t1, 0		#Sets i to zero 
 li $t2, 0		#Sets j to zero
 
-li $t3, 0
-li $t4, 0
-
 Loop001:
-beq $t1, $a1, EXIT
+beq $t1, $k0, EXIT	#If i == 3 EXIT
 
 Loop002:
-beq $t3, $a1, EXIT
-mul $t5, $t1, $s0
-mul $t6, $t2, $s0
-add $t7, $t5, $t2
-add $t8, $t6, $t1
-mul $t9, $t7, $s0
-mul $s1, $t8, $s0
-add $t9($a1), $t3, $zero
-add $s1($a0), $t4, $zero
+beq $t2, $k0, EXIT	#If j== 3 EXIT
 
-addi $t1, $t1, 1
-addi $t2, $t2, 1
+mul $t3, $t1, $k1	#(i*16)   
+mul $t4, $t2, $s0	#(j*16)
+mul $t5, $t2, $s0	#j*4
+mul $t6, $t1, $s0	#i*4
+add $t3, $t3, $t5	#(i*16)+j*4 The calculated offset
+add $t4, $t4, $t6	#(j*16)+i*4 The calculated offset
 
-j Loop002
+add $t3, $a1, $t3	#Base plus offset for [i][j]
+add $t4, $a1, $t4	#Base plus offset for [j][i]
 
-j Loop001
+lw $v0, ($t3)		#Get Original[i][j]
+lw $v1, ($t4)		#Get Original[j][i]
+lw $t5, ($t3)		#Get Second[i][j]
+lw $t6, ($t4)		#Get Second[j][i]
+
+add $t5, $v1, $zero	#Moves the data from v1 to t5
+add $t6, $v0, $zero	#Moves the data from v0 to t6
+
+		
+
+addi $t2, $t2, 1	# Increments J+1
+
+j Loop002		#Jumps to Label Loop002
+
+addi $t1, $t1, 1	# Increments I+1
+
+j Loop001		#Jumps to Label Loop001
+
+EXIT:
+li $t1, 0		#Sets i to zero 
+li $t2, 0		#Sets j to zero
+
+Loop003:
+beq $t1, $k0, END	#If i == 3 END
+
+Loop004:
+beq $t2, $k0, END	#If j== 3 EXIT
+mul $t3, $t1, $k1	#(i*16)
+mul $t5, $t2, $s0	#j*4
+add $t3, $t3, $t5	#(i*16)+j*4 The calculated offset
+add $t3, $a1, $t3	# Base plus offset for [i][j]
+lw $t5, ($t3)		#Get Second[i][j]
+add $a0, $t5, $zero	#Puts the value of Second[i][j] in $a0
+
+li $v0, 1	       	#$system call code for print integer
+syscall			#Print the integer
+
+addi $t2, $t2, 1	# Increments J+1
+
+j Loop003		#Jumps to Label Loop003
+
+addi $t1, $t1, 1	# Increments I+1
+
+j Loop004		#Jumps to Label Loop004
+
+END:
 
 
-				
