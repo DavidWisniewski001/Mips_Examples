@@ -19,24 +19,41 @@ Second:		.space	64
 .align 2
 .globl main
 .text
-main:	
+main:
+#This is the set up for the calculations for the array
+#If you want to make the array bigger you can change the value in $s1
+
+###################################################################################	
 la $a1, Original	#Loads the adress of the Original array
 la $a2, Second		#Loads the adress of the second array
 
 li $s1, 4		#The size of the x by x matrix
 li $s0, 4		#Constant to multiply by a word is 4 bytes
-li $k0, 3		#Where I want both counters to stop when i and j == 3
+li $k0, 4		#Where I want both counters to stop when i and j < 4
 mul $k1, $s0, $s1	# 4*4 =16
+
+#Test Output
+#add $a0, $k1, $zero	#Transfers data from one register to another
+#li $v0, 1	       	#$system call code for print integer
+#syscall		#Print the integer
 
 li $t1, 0		#Sets i to zero 
 li $t2, 0		#Sets j to zero
 
+###################################################################################
 Loop001:
 beq $t1, $k0, EXIT	#If i == 3 EXIT
 li $t2, 0		#Sets j to zero
+#Test Output for i
+add $a0, $t1, $zero	#Transfers data from one register to another
+li $v0, 1	       	#$system call code for print integer
+syscall			#Print the integer
+
+#Infinate loop ??
+# Output 000000000000000000000000000000000000000000000000000000000000000000000000000000000 and crash
 
 Loop002:
-beq $t2, $k0, Loop001	#If j== 3 Loop001
+bltu $t2, $k0, Loop001	#If j== 3 Loop001
 
 mul $t3, $t1, $k1	#(i*16)   
 mul $t4, $t2, $k1	#(j*16)
