@@ -33,16 +33,18 @@ li $t2, 0		#Sets j to zero
 
 Loop001:
 beq $t1, $k0, EXIT	#If i == 3 EXIT
+li $t2, 0		#Sets j to zero
 
 Loop002:
-beq $t2, $k0, EXIT	#If j== 3 EXIT
+beq $t2, $k0, Loop001	#If j== 3 Loop001
 
 mul $t3, $t1, $k1	#(i*16)   
-mul $t4, $t2, $s0	#(j*16)
-mul $t5, $t2, $s0	#j*4
-mul $t6, $t1, $s0	#i*4
-add $t3, $t3, $t5	#(i*16)+j*4 The calculated offset
-add $t4, $t4, $t6	#(j*16)+i*4 The calculated offset
+mul $t4, $t2, $k1	#(j*16)
+mul $t5, $t1, $s0	#i*4
+mul $t6, $t2, $s0	#j*4
+
+add $t3, $t3, $t6	#(i*16)+j*4 The calculated offset
+add $t4, $t4, $t5	#(j*16)+i*4 The calculated offset
 
 add $t3, $a1, $t3	#Base plus offset for [i][j]
 add $t4, $a1, $t4	#Base plus offset for [j][i]
@@ -71,18 +73,23 @@ li $t2, 0		#Sets j to zero
 
 Loop003:
 beq $t1, $k0, END	#If i == 3 END
+li $t2, 0		#Sets j to zero
+
 
 Loop004:
-beq $t2, $k0, END	#If j== 3 EXIT
+beq $t2, $k0, Loop003	#If j== 3 EXIT
 mul $t3, $t1, $k1	#(i*16)
 mul $t5, $t2, $s0	#j*4
 add $t3, $t3, $t5	#(i*16)+j*4 The calculated offset
 add $t3, $a1, $t3	# Base plus offset for [i][j]
 lw $t5, ($t3)		#Get Second[i][j]
 add $a0, $t5, $zero	#Puts the value of Second[i][j] in $a0
-
 li $v0, 1	       	#$system call code for print integer
 syscall			#Print the integer
+# print space, 32 is ASCII code for space
+li $a0, 32
+li $v0, 11  # syscall number for printing character
+syscall
 
 addi $t2, $t2, 1	# Increments J+1
 
@@ -93,5 +100,5 @@ addi $t1, $t1, 1	# Increments I+1
 j Loop004		#Jumps to Label Loop004
 
 END:
-
+syscall 
 
