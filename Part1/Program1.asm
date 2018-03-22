@@ -43,32 +43,15 @@ mul $k1, $s0, $s1	# 4*4 =16
 ###################################################################################
 li $t1, 0 	        # This is the start index for i
 
-#Print strA
+
 	la $a0, strA     		#load address stra
  	li $v0, 4           		#system code 4 for printing a string
-	syscall
+	syscall				#Print strA
 
 Loop001:
 	li $t2, 0           # This is the start index for j
 
 Loop002:
-# Print the values for 'i' and 'j' ($t0 and $t1)
-#First print 'i' ($t0)
-#	li $v0, 1          		 # system code 1 for printing an integer	          
-#    	add $a0, $zero, $t1		 # copy register $t1 to $a0
-     					    		
-#	syscall
-
-#Print Newline
-# 	la $a0, newline     		#load address of whitespace into $a0
-#  	li $v0, 4           		#system code 4 for printing a string
-#	syscall
-
-#Now print 'j' ($t1)
-#	li $v0, 1           		# system code 1 for printing an integer	          
-#     	add $a0, $zero, $t1 		# copy register $t1 to $a0
-#	syscall
-
 
 	mul $t3, $t1, $k1		#(i*16)
 	mul $t6, $t2, $s0		#j*4
@@ -131,20 +114,18 @@ Loop002:
 				    	# else
 				    	#   $t5 <- 0     	
 
-#branch if $t5 != 0 (which means $t0 < 4 because of the slti)
-	bne $t5, $zero, Loop001
 
-##########################################################################################
-# Makes Things look pretty
-la $a0, newline     		#load address of whitespace into $a0
-li $v0, 4           		#system code 4 for printing a string
+	bne $t5, $zero, Loop001		#branch if $t5 != 0 (which means $t0 < 4 because of the slti)
+	
+
+la $a0, newline     			#load address of whitespace into $a0
+li $v0, 4           			#system code 4 for printing a string
 syscall
 
-la $a0, strB     		#load address strB
-li $v0, 4           		#system code 4 for printing a string
+la $a0, strB     			#load address strB
+li $v0, 4           			#system code 4 for printing a string
 syscall
 
-###########################################################################################
 
 li $t1, 0 	        		# This is the start index for i
 Loop003:
@@ -163,13 +144,11 @@ Loop004:
      	add $a0, $zero, $t5 		# copy register $t1 to $a0
      	syscall 
 			
-#Now print the space "  "
+
  	la $a0, space 			# load address of comma_stringinto $a0
   	li $v0, 4            		# system code 4 for printing a string
-	syscall
+	syscall				# Prints a space
 
-	
-#This is the inner loop branch part
 	addi $t2, $t2, 1    		# j <- j + 1 (increment count)
 
      	slti  $t5, $t2, 4 		# 'set less than (immediate) instr. 
@@ -178,13 +157,13 @@ Loop004:
 				    	# else
 				    	#   $t5 <- 0     	
 
-#branch if $t5 != 0 (which means $t1 < 4 because of the slti)
-	bne $t5, $zero, Loop004
 
-#Now print newline "\n"
+	bne $t5, $zero, Loop004		#branch if $t5 != 0 (which means $t1 < 4 because of the slti)
+
+
  	la $a0, newline     		#load address of whitespace into $a0
   	li $v0, 4           		#system code 4 for printing a string
-	syscall
+	syscall				#Prints a newline "\n"
 
 #This is the outer loop branch part
 
@@ -196,8 +175,8 @@ Loop004:
 				    	# else
 				    	#   $t5 <- 0     	
 
-#branch if $t5 != 0 (which means $t0 < 4 because of the slti)
-	bne $t5, $zero, Loop003
+
+	bne $t5, $zero, Loop003		#branch if $t5 != 0 (which means $t0 < 4 because of the slti)
 
 
 #Exit system call
