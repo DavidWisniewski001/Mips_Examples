@@ -43,6 +43,11 @@ mul $k1, $s0, $s1	# 4*4 =16
 ###################################################################################
 li $t1, 0 	        # This is the start index for i
 
+#Print strA
+	la $a0, strA     		#load address stra
+ 	li $v0, 4           		#system code 4 for printing a string
+	syscall
+
 Loop001:
 	li $t2, 0           # This is the start index for j
 
@@ -69,17 +74,20 @@ Loop002:
 	mul $t6, $t2, $s0		#j*4
 	   
 	mul $t4, $t2, $k1		#(j*16)
-	mul $t5, $t1, $s0		#i*4
-	
+	mul $t5, $t1, $s0		#i*4	
 
 	add $t3, $t3, $t6		#(i*16)+j*4 The calculated offset
 	add $t4, $t4, $t5		#(j*16)+i*4 The calculated offset
-
+	
+	add $t7, $a2, $t3		#Base plus offset for [i][j]
+	add $t8, $a2, $t4		#Base plus offset for [j][i]
+	lw $s7, ($t7)			#Get Second[i][j]
+	lw $t9,	($t8)			#Get Second[j][i]
+		
 	add $t3, $a1, $t3		#Base plus offset for [i][j]
 	add $t4, $a1, $t4		#Base plus offset for [j][i]
-
 	lw $t5, ($t3)			#Get Original[i][j]
-	lw $t6, ($t4)			#Get Second[j][i]
+	lw $t6, ($t4)			#Get Original[j][i]
 	
 	li $v0, 1           		# system code 1 for printing an integer	          
      	add $a0, $zero, $t5 		# copy register $t5 to $a0
@@ -89,8 +97,11 @@ Loop002:
   	li $v0, 4            		# system code 4 for printing a string
 	syscall
 
-	add $t6, $zero, $t5		#Moves the data from t5 to t6
-	sw $t6, ($t4)			#Stores the data in the second array
+	add $s7, $zero, $t6		#Moves the data from t6 to s7
+	sw $s7, ($t7)			#Stores the data in the second array
+	
+	add $t9, $t5, $zero		#Moves the data from t5 to t9
+	sw $t9, ($t8)			#Stores the data in the second array 
 	
 	
 #This is the inner loop branch part
@@ -124,30 +135,32 @@ Loop002:
 	bne $t5, $zero, Loop001
 
 ##########################################################################################
-li $t1, 0 	        		# This is the start index for i
+# Makes Things look pretty
+la $a0, newline     		#load address of whitespace into $a0
+li $v0, 4           		#system code 4 for printing a string
+syscall
 
+la $a0, strB     		#load address strB
+li $v0, 4           		#system code 4 for printing a string
+syscall
+
+###########################################################################################
+
+li $t1, 0 	        		# This is the start index for i
 Loop003:
 	li $t2, 0           		# This is the start index for j
 
 Loop004:
-# Print the values for 'i' and 'j' ($t0 and $t1)
-#First print 'i' ($t0)
-	li $v0, 1          		 # system code 1 for printing an integer	          
-     	add $a0, $zero, $t1		 # copy register $t1 to $a0
-     					    		
-	syscall
-
+    					    		
 	mul $t3, $t1, $k1		#(i*16)   
-	mul $t6, $t2, $s0		#j*4
+	mul $t4, $t2, $s0		#j*4
 
-	add $t3, $t3, $t6		#(i*16)+j*4 The calculated offset
-	add $t3, $a1, $t3		#Base plus offset for [i][j]
+	add $t3, $t3, $t4		#(i*16)+j*4 The calculated offset
+	add $t3, $a2, $t3		#Base plus offset for [i][j]
+	lw  $t5, ($t3)			#Get Second[j][i]
 
-	lw $t6, ($t4)			#Get Second[j][i]
-
-#Now print 'j' ($t1)
 	li $v0, 1           		# system code 1 for printing an integer	          
-     	add $a0, $zero, $t6 		# copy register $t1 to $a0
+     	add $a0, $zero, $t5 		# copy register $t1 to $a0
      	syscall 
 			
 #Now print the space "  "
