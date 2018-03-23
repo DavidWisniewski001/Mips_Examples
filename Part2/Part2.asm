@@ -28,7 +28,6 @@ main:
 	li   $v0, 4		#code for printing a string
 	syscall
         
-
 #http://students.cs.tamu.edu/tanzir/csce350/reference/syscalls.html
 
 	li   $v0, 5		#Code to read the user input		
