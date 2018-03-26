@@ -36,9 +36,9 @@ main:
 	li $t1, 0
 	add $t1, $v0, $zero	#Places the users number in register t1
 	          
-	li $v0, 1           	#system code 1 for printing an integer	          
-	add $a0, $zero, $t1 	#copy register $t1 to $a0
-	syscall
+#	li $v0, 1           	#system code 1 for printing an integer	          
+#	add $a0, $zero, $t1 	#copy register $t1 to $a0
+#	syscall
            
 ##################################################################################################################	
 	
@@ -56,7 +56,9 @@ main:
 #	li   $v0, 4		#code for printing a string
 #	syscall
 ###################################################################################################################
+
 #walking throught the array
+	
 	la 	$a0, Numbers	# Base address
 	la	$a1, 0($a0)	#Loads the data from adress a0 into a1
 	la	$a2, 48($a0)	#Loads the end of the array
@@ -69,17 +71,17 @@ main:
 	add $s1, $t2, $s1	#Adds the item to the sum
 		
 		
-	li $v0, 1           	#system code 1 for printing an integer	          
-	add $a0, $zero, $t2 	#copy register $t1 to $a0
-	syscall
+#	li $v0, 1           	#system code 1 for printing an integer	          
+#	add $a0, $zero, $t2 	#copy register $t1 to $a0
+#	syscall
 	
-	la   $a0, newline	#loads the adress of  newline
-	li   $v0, 4		#code for printing a string
-	syscall	
+#	la   $a0, newline	#loads the adress of  newline
+#	li   $v0, 4		#code for printing a string
+#	syscall	
 	
 	
-	# increment base+displacemnet
-	add	$a1, $a1, $t1
+	
+	add	$a1, $a1, $t1	# Increment base+displacemnet
 	blt	$a1,$a2, LOOP 	# If the address at a1 is less than the adress in a2 then branch to loop
 
 	li $v0, 1           	#system code 1 for printing an integer	          
@@ -95,3 +97,6 @@ main:
 #Exit system call
 li $v0, 10 # Sets $v0 to "10" to select exit syscall
 syscall # Exit
+
+
+# Everything works no changes were made issue with loading in SPIM 
