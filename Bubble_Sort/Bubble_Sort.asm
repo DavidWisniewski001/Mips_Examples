@@ -35,24 +35,24 @@ main:
 OuterLoop:
 	
 		
-InnerLoop:	lw $t0, ($s0) 		#Loads the value of the last element in the array
-		lw $t1, ($s1)		#Loads the value of the second last element in the array
-		slt $t2, $t1, $t0	#Compares the two values if $t0 < $t0 put a 1 in register $t2
-		bne $t0,$zero,Swap	#Branches to swap
-		j Continue		#Jumps over Swap
+InnerLoop:	lw $t0, ($s0) 			#Loads the value of the last element in the array
+		lw $t1, ($s1)			#Loads the value of the second last element in the array
+		slt $t2, $t1, $t0		#Compares the two values if $t0 < $t0 put a 1 in register $t2
+		bne $t0,$zero,Swap		#Branches to swap
+		j Continue			#Jumps over Swap
 
-Swap:		sw $t1, ($s0)		#Stores the values in different registers
+Swap:		sw $t1, ($s0)			#Stores the values in different registers
 		sw $t0, ($s1)
 		
 Continue:			
-		addi $t6, $t6, 4	#Increments the loop Counter
-		add $s1, $a1, $t6	#Adds the offset to the adress
-		bne $t6, $s3, InnerLoop	#If the inner Loop is not equal to $s3 branch to InnerrLoop
+		addi $t6, $t6, 4		#Increments the loop Counter
+		add $s1, $a1, $t6		#Adds the offset to the adress
+		bne $t6, $s3, InnerLoop		#If the inner Loop is not equal to $s3 branch to InnerrLoop
 		
-		li $t6, 0		#Resets the register value
-		addi $t7, $t7, 4	#Increments the outer Loop counter
-		add $s0, $a1, $t7	#Adds the offset to the address
-		bne $t7, $s2, OuterLoop #Branches to the OuterLoop if $t7 is not equal to $s2 
+		li $t6, 0			#Resets the register value
+		addi $t7, $t7, 4		#Increments the outer Loop counter
+		add $s0, $a1, $t7		#Adds the offset to the address
+		bne $t7, $s2, OuterLoop 	#Branches to the OuterLoop if $t7 is not equal to $s2 
 		li $t7, 0
 		
 ########################################################################################################
