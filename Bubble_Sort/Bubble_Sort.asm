@@ -37,8 +37,7 @@ OuterLoop:
 		
 InnerLoop:	lw $t0, ($s0) 			#Loads the value of the last element in the array
 		lw $t1, ($s1)			#Loads the value of the second last element in the array
-		slt $t2, $t1, $t0		#Compares the two values if $t0 < $t0 put a 1 in register $t2
-		bne $t0,$zero,Swap		#Branches to swap
+		blt $t0, $t1, Swap		#Compares the two values if $t0 < $t0 put a 1 in register $t2 then branches to swap
 		j Continue			#Jumps over Swap
 
 Swap:		sw $t1, ($s0)			#Stores the values in different registers
@@ -52,7 +51,7 @@ Continue:
 		li $t6, 0			#Resets the register value
 		addi $t7, $t7, 4		#Increments the outer Loop counter
 		add $s0, $a1, $t7		#Adds the offset to the address
-		bne $t7, $s2, OuterLoop 	#Branches to the OuterLoop if $t7 is not equal to $s2 
+		bne $t7, $s3, OuterLoop 	#Branches to the OuterLoop if $t7 is not equal to $s2 
 		li $t7, 0
 		
 ########################################################################################################
