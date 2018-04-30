@@ -18,25 +18,21 @@ Original:	.word 12 4 100 0 0 1 5 23 81 84 11 12 51 61 24 5 4 2 44 100
 
 main:
 
-		la $a1, Original	#Loads the adress of the Original array
-		li $s3, 80		#Sets i to 80
-		li $s2, 76		#Sets j to 76
-		li $t6, 0		#Inner Loop counter
-		li $t7, 0		#Outer Loop Counter
+		la $a1, Original		#Loads the adress of the Original array
+		li $s3, 80			#Sets i to 80
+		li $s2, 76			#Sets j to 76
+		li $t6, 0			#Inner Loop counter
+		li $t7, 0			#Outer Loop Counter
 		
 		
-		add $s0, $a1, $t7	#Calculates the offset for the array
+		add $s0, $a1, $t7		#Calculates the offset for the array
 		add $s1, $a1, $t6
-
-		#lw $a0, ($s0)
-		#li $v0, 1           		#system code 4 for printing a string
-		#syscall				#Print strA
 
 OuterLoop:
 	
 		
-InnerLoop:	lw $t0, ($s0) 			#Loads the value of the last element in the array
-		lw $t1, ($s1)			#Loads the value of the second last element in the array
+InnerLoop:	lw $t0, ($s0) 			#Loads the value of an element in the array
+		lw $t1, ($s1)			#Loads the value of another element in the array
 		blt $t0, $t1, Swap		#Compares the two values if $t0 < $t0 put a 1 in register $t2 then branches to swap
 		j Continue			#Jumps over Swap
 
@@ -53,8 +49,10 @@ Continue:
 		add $s0, $a1, $t7		#Adds the offset to the address
 		bne $t7, $s3, OuterLoop 	#Branches to the OuterLoop if $t7 is not equal to $s2 
 		li $t7, 0
+		add $s0, $a1, $zero
 		
 ########################################################################################################
+
 Display:		
 		add $s0, $a1, $t7		#Adds the offset to the adress
 		
